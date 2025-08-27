@@ -18,7 +18,7 @@ public class AsciiRender {
 	List<BufferedImage> sourceList = Collections.synchronizedList(new ArrayList<BufferedImage>());
 	List<BufferedImage> destinationList = Collections.synchronizedList(new ArrayList<BufferedImage>());
 	List<BufferedImage> sourceListEdges = Collections.synchronizedList(new ArrayList<BufferedImage>());
-	List<BufferedImage> destinationListEdges = Collections.synchronizedList(new ArrayList<BufferedImage>());
+
 	
 	List<BufferedImage> rowsListForGrayscaling = Collections.synchronizedList(new ArrayList<BufferedImage>());
 	Map<Integer, String> letters = Collections.synchronizedMap(new HashMap<Integer, String>());
@@ -127,7 +127,7 @@ public class AsciiRender {
 //			System.out.println("subimage to Source = " + y + " from " + imageOriginal.getHeight());
 		
 			boolean addedToEdge = sourceListEdges.add(subimageEdgesSource);
-			destinationListEdges.add(backgoundEdges);
+//			destinationListEdges.add(backgoundEdges);
 //			System.out.println("subimage to SourceListEdged = " + y + " from " + imageOriginal.getHeight() + " added  = " + addedToEdge);
 			y += size;
 		}
