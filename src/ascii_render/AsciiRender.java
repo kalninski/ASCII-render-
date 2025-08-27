@@ -27,14 +27,16 @@ public class AsciiRender {
 	BufferedImage imageOriginal;
 	BufferedImage imageOriginalEdges;
 	BufferedImage destinationImage;
-	int size = 20;
+	int size = 10;
 	String fontName = "Arial";
-	Font font = new Font("Arial", Font.BOLD, 15);
+	Font font = new Font("Arial", Font.BOLD, 9);
 	char qed = '\u23f9';
 	String qedStr = "" + qed;
 	char alef = '\u05d0';
+	char em = '\u2014';
+	String emdash = "" + em;
 	String alefStr = "" + alef;
-	String[] listOfLetters = new String[] {" ",".","~","?","Y","W", "&","@","$",alefStr, qedStr};
+	String[] listOfLetters = new String[] {" ",".","~","i","r","a", "g","A","$",alefStr, qedStr};
 	String directory;
 	
 	public AsciiRender(String path,String sourceName, String newName) {
@@ -51,7 +53,7 @@ public class AsciiRender {
 		try{
 			imageOriginal = ImageIO.read(file);
 			imageOriginalEdges = ImageIO.read(file);
-			lowerResolution();
+			rescale();
 			edgeSourceToGrayScale();
 
 			separateIntoSubimages();
@@ -68,7 +70,7 @@ public class AsciiRender {
 	}
 	
 	//rename to prepare images -> resize the source images for edgedetection
-	public void lowerResolution() {
+	public void rescale() {
 		
 		int height  = imageOriginal.getHeight();
 		int width = imageOriginal.getWidth();
@@ -110,7 +112,7 @@ public class AsciiRender {
 //separate the subimages for edge detection source and edge detection ouput
 	public void separateIntoSubimages() {
 		String sep = File.separator;
-		File file  = new File(directory + sep + "randomStrinp.png");
+	
 		int y = 0;
 		int width = imageOriginal.getWidth();
 //		System.out.println("NEW HEIGHT = " + imageOriginal.getHeight());
@@ -119,13 +121,7 @@ public class AsciiRender {
 			BufferedImage background = new BufferedImage(width, size, BufferedImage.TYPE_INT_RGB);
 			BufferedImage subimageEdgesSource = imageOriginalEdges.getSubimage(0, y, width, size);
 			BufferedImage backgoundEdges = new BufferedImage(width, size, BufferedImage.TYPE_INT_RGB);
-			if(y == 0) {
-				try {
-					ImageIO.write(subimageEdgesSource, "png", file);
-					}catch(IOException ex) {
-						System.out.println("one strip not saved");
-					}
-			}
+			
 			sourceList.add(subimage);
 			destinationList.add(background);
 //			System.out.println("subimage to Source = " + y + " from " + imageOriginal.getHeight());
@@ -302,20 +298,22 @@ public class AsciiRender {
 			double arg = avgDiffY/avgDiffX;
 			
 			double angle  = Math.atan(arg);
+//			double angle  = Math.atan2(avgDiffY, avgDiffX);	
 			angle  = angle * (180 / Math.PI);
 			
 	//		System.out.println("dist > 20 angle  = " + angle);
 			
-			if((angle <= 90 && angle > 85) || (angle >= -90 && angle <= -85)) {
-				letter = "_";
+			if((angle <= 90 && angle >= 75) || (angle >= -90 && angle <= -75)) {
+				letter = emdash;
+				System.out.println("angle between -20 and 20 = " + angle);
 			}
-			if(angle >= 15 && angle <= 85) {
+			if(angle > 15 && angle < 75) {
 				letter = "/";
 			}
-			if(angle < 5 && angle > -5) {
+			if(angle <= 15 && angle >= -15) {
 			letter = "|";
 			}
-			if(angle < -15 && angle > -85) {
+			if(angle < -15 && angle > -75) {
 				letter = "\\";
 			}
 				g2dOut.setFont(font);

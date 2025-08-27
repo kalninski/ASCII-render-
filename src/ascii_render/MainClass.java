@@ -357,7 +357,7 @@ public class MainClass {
 //		}
 
 
-		AsciiRender aR = new AsciiRender("C:\\Users\\Toms\\Desktop\\ASCII_IMAGES", "ES_SMAIDU.png", "ES_SMAIDU.2_20px_15pt1.png");
+		AsciiRender aR = new AsciiRender("C:\\Users\\Toms\\Desktop\\ASCII_IMAGES", "ES_ARA_2x.png", "ES_ARA_improved_2x.2_square_10px_9pt.png");
 		long end = clock.millis();
 		System.out.println("Time it took to render = " + (end - start) + " milliseconds");
 		
