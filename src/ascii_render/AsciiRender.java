@@ -15,9 +15,15 @@ import java.awt.image.*;
 
 public class AsciiRender {
 	
-	List<BufferedImage> sourceList = Collections.synchronizedList(new ArrayList<BufferedImage>());
+	
+	/*
+	 * Source list  - simplified image strips -> one color per 10x10 px area
+	 * Edge Source list - list of same strips, but not simplified and is used for the edge detection
+	 * destinationList - list of finished strips to be be stuck together for the final image
+	 */
+	List<BufferedImage> sourceList = Collections.synchronizedList(new ArrayList<BufferedImage>());//simplified image strip list for letters
 	List<BufferedImage> destinationList = Collections.synchronizedList(new ArrayList<BufferedImage>());
-	List<BufferedImage> sourceListEdges = Collections.synchronizedList(new ArrayList<BufferedImage>());
+	List<BufferedImage> sourceListEdges = Collections.synchronizedList(new ArrayList<BufferedImage>());//not simplified image strips for edge detection
 
 	
 	List<BufferedImage> rowsListForGrayscaling = Collections.synchronizedList(new ArrayList<BufferedImage>());
@@ -30,13 +36,14 @@ public class AsciiRender {
 	int size = 10;
 	String fontName = "Arial";
 	Font font = new Font("Arial", Font.BOLD, 9);
-	char qed = '\u23f9';
+	char qed = '\u25a0';
 	String qedStr = "" + qed;
 	char alef = '\u05d0';
 	char em = '\u2014';
 	String emdash = "" + em;
 	String alefStr = "" + alef;
-	String[] listOfLetters = new String[] {" ",".","~","i","r","a", "g","A","$",alefStr, qedStr};
+	String[] listOfLetters = new String[] {" "," "," "," "," "," ", " "," "," "," ", " "};
+//	String[] listOfLetters = new String[] {" ",".","~","T","A","M", "R","#","@", qedStr, qedStr};
 	String directory;
 	
 	public AsciiRender(String path,String sourceName, String newName) {
@@ -232,6 +239,20 @@ public class AsciiRender {
 //	}
 	
 
+	/**
+	 * Takes in one strip from the sourList of simplified strips as an argument, then with index() method estimates the character key for the hashma
+	 * of characters. Then based on which index this parameter is, the respective strip for edge detection is gotten from the edge source list to estimate if there is in fact an edge
+	 * so if there really is an edge then instead of a char value from the hash map, the respective edge angle symbol is assigned to that location
+	 * Also the indexOf method is used to get the right dummy strip from the destination list and the respective edges and nonedges are infact written onto that object, this way the
+	 * order of the strips remains correct, so it can be easily assembled just by iterating over the destination list. It seems to me now, that there was no need to make that
+	 * list also synchronized, because BufferedImage is not thread safe so even if the destination list is, it still would have problems with concurrency.
+	 * Also this may be the reason why I was not able to just state the index of an element and add it like to he destination list for example if the list is empty, like
+	 * the need for dummy strips how it seems to me is that based on number of elements the capacity of it grows, so if there are no elements and the first strip the program
+	 * finishes is the 300th thread it is way outside of the capacity even if it is at least the number of elements. So If I am not mistaken, then if the capacity is based on the
+	 * number of elements being 75% of the potential capacity then even if therea are 10 elements in the list, the 300th element is way out of that capacity
+	 * @param subimg
+	 * @param indexOf
+	 */
 	
 	public void renderOneStrip(BufferedImage subimg,int indexOf) {
 		BufferedImage subimgOut = destinationList.get(indexOf);
